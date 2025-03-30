@@ -23,32 +23,28 @@ io.on("connection", (socket) => {
         
     socket.on('sendMessage', async ({ room, message, senderId }) => {
         console.log("sendMessage event received:", { room, message, senderId });
-        try {
-            const apiURL = `${process.env.API_URL}/api/users/${senderId}`;
-            console.log("Fetching sender data from:", apiURL);
-            const response = await fetch(apiURL);
-            console.log("Response received:", response.status);
-            if (!response.ok) {
-                console.error("Non-OK response:", response.status);
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const userData = await response.json();
-            console.log(`Populated sender data:`, userData);
-            io.to(room).emit('newMessage', {
-                chatRoomId: room,
-                message,
-                createdAt: new Date(),
-                senderId: userData,
-            });
-        } catch (error) {
-            console.error("Error fetching user data for senderId:", error);
-            io.to(room).emit('newMessage', {
-                chatRoomId: room,
-                message,
-                createdAt: new Date(),
-                senderId: { _id: senderId },
-            });
-        }
+
+        io.to(room).emit('newMessage', {
+            chatRoomId: room,
+            message,
+            createdAt: new Date(),
+            senderId
+        });
+        // try {
+        //     const apiURL = `${process.env.API_URL}/api/users/${senderId}`;
+        //     console.log("Fetching sender data from:", apiURL);
+        //     const response = await fetch(apiURL);
+        //     console.log("Response received:", response.status);
+        //     if (!response.ok) {
+        //         console.error("Non-OK response:", response.status);
+        //         throw new Error(`HTTP error! status: ${response.status}`);
+        //     }
+        //     const userData = await response.json();
+        //     console.log(`Populated sender data:`, userData);
+            
+        // } catch (error) {
+        //     console.error("Error fetching user data for senderId:", error);
+        // }
     });
     
     socket.on('leaveRoom', (roomId) => {
