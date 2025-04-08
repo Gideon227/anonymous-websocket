@@ -21,8 +21,8 @@ io.on("connection", (socket) => {
         console.log(`${socket.id} joined room: ${roomId}`);
     });
         
-    socket.on('sendMessage', async ({ room, message, senderId }) => {
-        console.log("sendMessage event received:", { room, message, senderId });
+    socket.on('sendMessage', async ({ room, message, senderId, senderName }) => {
+        console.log("sendMessage event received:", { room, message, senderId, senderName });
 
         
         try {
@@ -30,7 +30,8 @@ io.on("connection", (socket) => {
                 chatRoomId: room,
                 message,
                 createdAt: new Date(),
-                senderId
+                senderId, 
+                senderName
             });
         } catch (error) {
             console.error("Error fetching user data for senderId:", error);
